@@ -1,35 +1,50 @@
-const Gameboard = (function () {
-  const board = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ];
-
-  const updateBoard = function (row, column, value) {
-    board[row][column] = value;
-    return board;
-  };
-
-  const getBoard = () => board;
-  return { getBoard, updateBoard };
-})();
-
-function GameController(playerOneName, playerTwoName) {
+const Players = (function (
+  playerOneName = "Player One",
+  playerTwoName = "Player Two"
+) {
   const players = [
     {
       name: playerOneName,
       token: 1,
     },
-
     {
       name: playerTwoName,
       token: 2,
     },
   ];
+
+  const getPlayerToken = () => players.map((player) => player.token);
+
+  return { getPlayerToken };
+})();
+
+//get an active player token
+
+function gameFlow() {
+  let activePlayer = players[0];
+
+  const changeActivePlayer = function () {
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
+  };
 }
 
-function changeVal() {
-  console.log(Gameboard.updateBoard(1, 1, 13));
-}
+const Gameboard = (function () {
+  let board = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ];
 
-changeVal();
+  let val;
+  val = Players.getPlayerToken()[0];
+  let row = 2;
+  let column = 2;
+
+  board[row][column] = val;
+
+  const getBoard = () => board;
+
+  return { getBoard };
+})();
+
+console.log(Gameboard.getBoard());

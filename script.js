@@ -61,14 +61,19 @@ function gameFlow(playerOneName = "Player One", playerTwoName = "Player Two") {
   const getActivePlayer = () => activePlayer;
 
   const printNewRound = () => {
-    board.getBoard();
+    board.printBoard();
   };
 
   const playRound = (row, column) => {
-    board.dropToken();
+    board.dropToken(row, column, getActivePlayer().token);
+
+    changePlayerTurn();
+    printNewRound();
   };
 
-  return { playRound, printNewRound };
+  printNewRound();
+
+  return { playRound, getActivePlayer };
 }
 
 const game = gameFlow();

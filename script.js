@@ -1,7 +1,46 @@
-const Players = (function (
-  playerOneName = "Player One",
-  playerTwoName = "Player Two"
-) {
+//get an active player token
+
+const Gameboard = (function () {
+  let board = [];
+
+  for (let i = 0; i < 3; i++) {
+    board[i] = [];
+    for (let j = 0; j < 3; j++) {
+      board[i].push(Cell());
+    }
+  }
+
+  const dropToken = (row, column, player) => {
+    board[row][column].addToken(player);
+  };
+
+  const printBoard = () => {
+    const boardWithCellValues = board.map((row) =>
+      row.map((cell) => cell.getValue())
+    );
+    console.log(boardWithCellValues);
+  };
+
+  const getBoard = () => board;
+
+  return { getBoard, dropToken, printBoard };
+})();
+
+function Cell() {
+  let value = 0;
+
+  const addToken = (player) => {
+    value = player;
+  };
+
+  const getValue = () => value;
+
+  return { addToken, getValue };
+}
+
+function gameFlow(playerOneName = "Player One", playerTwoName = "Player Two") {
+  const board = Gameboard;
+
   const players = [
     {
       name: playerOneName,
@@ -13,38 +52,23 @@ const Players = (function (
     },
   ];
 
-  const getPlayerToken = () => players.map((player) => player.token);
-
-  return { getPlayerToken };
-})();
-
-//get an active player token
-
-function gameFlow() {
   let activePlayer = players[0];
 
-  const changeActivePlayer = function () {
+  const changePlayerTurn = function () {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
+
+  const getActivePlayer = () => activePlayer;
+
+  const printNewRound = () => {
+    board.getBoard();
+  };
+
+  const playRound = (row, column) => {
+    board.dropToken();
+  };
+
+  return { playRound, printNewRound };
 }
 
-const Gameboard = (function () {
-  let board = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ];
-
-  let val;
-  val = Players.getPlayerToken()[0];
-  let row = 2;
-  let column = 2;
-
-  board[row][column] = val;
-
-  const getBoard = () => board;
-
-  return { getBoard };
-})();
-
-console.log(Gameboard.getBoard());
+const game = gameFlow();

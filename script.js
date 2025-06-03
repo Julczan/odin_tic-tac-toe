@@ -1,6 +1,25 @@
 const Gameboard = (function () {
   let board = [];
 
+  const drawConditions = () => {
+    const allCellsTaken =
+      board[0][0].getValue() !== 0 &&
+      board[0][1].getValue() !== 0 &&
+      board[0][2].getValue() !== 0 &&
+      board[1][0].getValue() !== 0 &&
+      board[1][1].getValue() !== 0 &&
+      board[1][2].getValue() !== 0 &&
+      board[2][0].getValue() !== 0 &&
+      board[2][1].getValue() !== 0 &&
+      board[2][2].getValue() !== 0;
+
+    if (allCellsTaken) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const winningConditions = () => {
     const row1WinningCondition =
       board[0][0].getValue() === board[0][1].getValue() &&
@@ -86,7 +105,7 @@ const Gameboard = (function () {
 
   const getBoard = () => board;
 
-  return { getBoard, dropToken, printBoard, winningConditions };
+  return { getBoard, dropToken, printBoard, winningConditions, drawConditions };
 })();
 
 function Cell() {
@@ -130,6 +149,10 @@ function gameFlow(playerOneName = "Player One", playerTwoName = "Player Two") {
 
   const playRound = (column, row) => {
     board.dropToken(row, column, getActivePlayer().token);
+
+    if (board.drawConditions()) {
+      console.log("It's a DRAW!");
+    }
 
     if (board.winningConditions()) {
       console.log("WINNER!");

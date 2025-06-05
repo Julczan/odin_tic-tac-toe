@@ -1,3 +1,29 @@
 body {
-  background-color: black;
+  background-color: rgb(201, 201, 201);
+  margin: 0;
+  padding: 0;
+  display: grid;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 600px;
+  height: 600px;
+  border: 2px black solid;
+  display: grid;
+  justify-content: center;
+}
+
+.board {
+  width: 500px;
+  height: 500px;
+  border: 2px solid black;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.cell {
 }

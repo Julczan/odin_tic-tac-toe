@@ -21,24 +21,29 @@ const Gameboard = (function () {
 })();
 
 function gameConditions(board) {
-  // const winningCombinations = [
-  //   [0, 1, 2],
-  //   [3, 4, 5],
-  //   [6, 7, 8],
-  //   [0, 3, 6],
-  //   [1, 4, 7],
-  //   [2, 5, 8],
-  //   [0, 4, 8],
-  //   [2, 4, 6],
-  // ];
-  // for (let i = 0; i < winningCombinations.length; i++) {
-  //   const [a, b, c] = winningCombinations[i];
-  //   if (board[a] !== 0 && board[a] === board[b] && board[a] === board[c]) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+  const winningConditions = (board) => {
+    const checking = [
+      board[0][0] + board[1][0] + board[2][0],
+      board[0][1] + board[1][1] + board[2][1],
+      board[0][2] + board[1][2] + board[2][2],
+
+      board[0][0] + board[0][1] + board[0][2],
+      board[1][0] + board[1][1] + board[1][2],
+      board[2][0] + board[2][1] + board[2][2],
+
+      board[0][0] + board[1][1] + board[2][2],
+      board[0][2] + board[1][1] + board[2][0],
+    ];
+
+    for (i = 0; i < checking.length; i++) {
+      if (checking[i] === 3) {
+        console.log("Player One wins!");
+      } else if (checking[i] === -3) {
+        console.log("Player Two wins!");
+      }
+    }
+  };
+
   const drawConditions = (board) => {
     const checkRow1 = board[0].some((v) => v === 0);
     const checkRow2 = board[1].some((v) => v === 0);
@@ -51,7 +56,7 @@ function gameConditions(board) {
     }
   };
 
-  return { drawConditions };
+  return { drawConditions, winningConditions };
 }
 
 function createPlayer(
@@ -60,7 +65,7 @@ function createPlayer(
 ) {
   const players = [
     { name: playerOneName, token: 1 },
-    { name: playerTwoName, token: 2 },
+    { name: playerTwoName, token: -1 },
   ];
 
   let activePlayer = players[0];
@@ -86,6 +91,8 @@ function gameFlow() {
 
   const playRound = (column, row) => {
     board.dropToken(row, column, players.getActivePlayer().token);
+
+    condition.winningConditions(board.getBoard());
 
     if (condition.drawConditions(board.getBoard())) {
       console.log("ITS A DRAW");

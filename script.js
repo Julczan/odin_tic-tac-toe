@@ -74,11 +74,9 @@ function createPlayer(
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
 
-  const getPlayerName = () => players;
-
   const getActivePlayer = () => activePlayer;
 
-  return { getActivePlayer, changePlayerTurn, getPlayerName };
+  return { getActivePlayer, changePlayerTurn };
 }
 
 function gameFlow() {
@@ -95,11 +93,11 @@ function gameFlow() {
   const playRound = (column, row) => {
     board.dropToken(row, column, players.getActivePlayer().token);
     if (condition.winningConditions(board.getBoard()) === "One") {
-      finish.getDialog();
+      finish.getDialog(players.getActivePlayer().name);
     } else if (condition.winningConditions(board.getBoard()) === "Two") {
-      finish.getDialog();
+      finish.getDialog(players.getActivePlayer().name);
     } else if (condition.drawConditions(board.getBoard())) {
-      finish.getDialog();
+      finish.getDialog("draw");
     } else {
       players.changePlayerTurn();
       printNewRound();
@@ -115,9 +113,16 @@ function gameFlow() {
   };
 }
 
-function gameOver() {
+function gameOver(winner) {
   const dialog = document.querySelector("dialog");
-  const getDialog = () => dialog.showModal();
+  const getDialog = (winner) => {
+    if (winner === "draw") {
+      dialog.textContent = "Its a DRAW!";
+    } else {
+      dialog.textContent = `${winner} WON!`;
+    }
+    dialog.showModal();
+  };
 
   return { getDialog };
 }

@@ -74,15 +74,18 @@ function createPlayer(
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
 
+  const getPlayerName = () => players;
+
   const getActivePlayer = () => activePlayer;
 
-  return { getActivePlayer, changePlayerTurn };
+  return { getActivePlayer, changePlayerTurn, getPlayerName };
 }
 
 function gameFlow() {
   const board = Gameboard;
   const players = createPlayer();
   const condition = gameConditions();
+  const finish = gameOver();
 
   const printNewRound = () => {
     console.log(board.getBoard());
@@ -91,13 +94,12 @@ function gameFlow() {
 
   const playRound = (column, row) => {
     board.dropToken(row, column, players.getActivePlayer().token);
-
     if (condition.winningConditions(board.getBoard()) === "One") {
-      console.log("Player One Wins!");
+      finish.getDialog();
     } else if (condition.winningConditions(board.getBoard()) === "Two") {
-      console.log("Player Two Wins!");
+      finish.getDialog();
     } else if (condition.drawConditions(board.getBoard())) {
-      console.log("ITS A DRAW");
+      finish.getDialog();
     } else {
       players.changePlayerTurn();
       printNewRound();
@@ -111,6 +113,13 @@ function gameFlow() {
     getBoard: board.getBoard,
     getActivePlayer: players.getActivePlayer,
   };
+}
+
+function gameOver() {
+  const dialog = document.querySelector("dialog");
+  const getDialog = () => dialog.showModal();
+
+  return { getDialog };
 }
 
 function screenController() {
@@ -128,12 +137,19 @@ function screenController() {
       row.forEach((cell, columnIndex) => {
         const cellButton = document.createElement("button");
         cellButton.classList.add("cell");
-
         cellButton.dataset.row = rowIndex;
         cellButton.dataset.column = columnIndex;
-
-        cellButton.textContent = cell;
-
+        switch (cell) {
+          case 0:
+            cellButton.textContent = "";
+            break;
+          case 1:
+            cellButton.textContent = "X";
+            break;
+          default:
+            cellButton.textContent = "O";
+            break;
+        }
         boardDiv.appendChild(cellButton);
       });
     });

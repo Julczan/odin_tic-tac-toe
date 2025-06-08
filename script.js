@@ -20,7 +20,7 @@ const Gameboard = (function () {
   return { getBoard, dropToken };
 })();
 
-function gameConditions(board) {
+function gameConditions() {
   const winningConditions = (board) => {
     const checking = [
       board[0][0] + board[1][0] + board[2][0],
@@ -36,10 +36,8 @@ function gameConditions(board) {
     ];
 
     for (i = 0; i < checking.length; i++) {
-      if (checking[i] === 3) {
-        return "One";
-      } else if (checking[i] === -3) {
-        return "Two";
+      if (checking[i] === 3 || checking[i] === -3) {
+        return true;
       }
     }
   };
@@ -59,13 +57,24 @@ function gameConditions(board) {
   return { drawConditions, winningConditions };
 }
 
-function createPlayer(
-  playerOneName = "Player one",
-  playerTwoName = "Player Two"
-) {
+function setPlayerNames() {
+  const firstName = document.querySelector("#name-1");
+  const secondName = document.querySelector("#name-2");
+
+  const getValues = () => [
+    firstName.value === "" ? "Player One" : firstName.value,
+    secondName.value === "" ? "Player Two" : secondName.value,
+  ];
+
+  return { getValues };
+}
+
+function createPlayer() {
+  const names = setPlayerNames();
+
   const players = [
-    { name: playerOneName, token: 1 },
-    { name: playerTwoName, token: -1 },
+    { name: names.getValues()[0], token: 1 },
+    { name: names.getValues()[1], token: -1 },
   ];
 
   let activePlayer = players[0];
@@ -92,9 +101,8 @@ function gameFlow() {
 
   const playRound = (column, row) => {
     board.dropToken(row, column, players.getActivePlayer().token);
-    if (condition.winningConditions(board.getBoard()) === "One") {
-      finish.getDialog(players.getActivePlayer().name);
-    } else if (condition.winningConditions(board.getBoard()) === "Two") {
+
+    if (condition.winningConditions(board.getBoard())) {
       finish.getDialog(players.getActivePlayer().name);
     } else if (condition.drawConditions(board.getBoard())) {
       finish.getDialog("draw");
@@ -113,13 +121,15 @@ function gameFlow() {
   };
 }
 
-function gameOver(winner) {
+function gameOver() {
   const dialog = document.querySelector("dialog");
+  const dialogText = document.querySelector(".text");
+
   const getDialog = (winner) => {
     if (winner === "draw") {
-      dialog.textContent = "Its a DRAW!";
+      dialogText.textContent = "Its a DRAW!";
     } else {
-      dialog.textContent = `${winner} WON!`;
+      dialogText.textContent = `${winner} WON!`;
     }
     dialog.showModal();
   };
@@ -175,4 +185,6 @@ function screenController() {
   updateScreen();
 }
 
-screenController();
+const submitBtn = document.querySelector("#submit");
+
+submitBtn.addEventListener("click", () => screenController());

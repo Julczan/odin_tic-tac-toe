@@ -36,3 +36,22 @@ body {
 dialog {
   font-size: 2rem;
 }
+
+.name-container {
+  margin-top: 10px;
+  gap: 20px;
+  justify-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.reset,
+button[id="submit"] {
+  width: 200px;
+  height: 50px;
+  border-radius: 20px;
+  background-color: aqua;
+  color: white;
+  border: none;
+  grid-column: 1/3;
+}

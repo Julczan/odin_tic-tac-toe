@@ -8,10 +8,18 @@
   </head>
   <body>
     <div class="container">
-      <dialog>GAME OVER</dialog>
+      <dialog>
+        <div class="text"></div>
+      </dialog>
       <div class="turn">TURN:</div>
       <div class="board"></div>
-      <div class="names"></div>
+      <div class="name-container">
+        <label for="name-1">Player One Name:</label>
+        <input type="text" id="name-1" placeholder="Name" />
+        <label for="name-2">Player Two Name:</label>
+        <input type="text" id="name-2" placeholder="Name" />
+        <button type="button" id="submit">START</button>
+      </div>
     </div>
     <script src="script.js"></script>
   </body>

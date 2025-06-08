@@ -5,6 +5,14 @@ const Gameboard = (function () {
     [0, 0, 0],
   ];
 
+  const resetGame = () => {
+    board = [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ];
+  };
+
   const dropToken = (row, column, player) => {
     const availableCells = board.map((row) => row.map((cell) => cell === 0));
 
@@ -17,7 +25,7 @@ const Gameboard = (function () {
 
   const getBoard = () => board;
 
-  return { getBoard, dropToken };
+  return { getBoard, dropToken, resetGame };
 })();
 
 function gameConditions() {
@@ -94,11 +102,6 @@ function gameFlow() {
   const condition = gameConditions();
   const finish = gameOver();
 
-  const printNewRound = () => {
-    console.log(board.getBoard());
-    console.log(`${players.getActivePlayer().name}'s turn`);
-  };
-
   const playRound = (column, row) => {
     board.dropToken(row, column, players.getActivePlayer().token);
 
@@ -108,16 +111,14 @@ function gameFlow() {
       finish.getDialog("draw");
     } else {
       players.changePlayerTurn();
-      printNewRound();
     }
   };
-
-  printNewRound();
 
   return {
     playRound,
     getBoard: board.getBoard,
     getActivePlayer: players.getActivePlayer,
+    resetGame: board.resetGame,
   };
 }
 
@@ -141,6 +142,12 @@ function screenController() {
   const game = gameFlow();
   const playerTurnDiv = document.querySelector(".turn");
   const boardDiv = document.querySelector(".board");
+  const resetBtn = document.querySelector("#reset");
+
+  resetBtn.addEventListener("click", () => {
+    game.resetGame();
+    updateScreen();
+  });
 
   const updateScreen = () => {
     boardDiv.textContent = "";
